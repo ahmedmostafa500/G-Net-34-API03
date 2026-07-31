@@ -23,11 +23,6 @@ namespace E_Commerce.Apllication.Services
             _mapper = mapper;
         }
 
-        public Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
         {
             var Repo = _unitOfWork.GetRepository<Product,int>();
@@ -46,9 +41,16 @@ namespace E_Commerce.Apllication.Services
             return _mapper.Map<ProductDto>(Product);    
         }
 
-        public Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
+        public async Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+          var Types= await _unitOfWork.GetRepository<ProductType , int>().GetAllAsync(ct);
+            return Result<IReadOnlyList<TypeDto>>.Ok(_mapper.Map<IReadOnlyList<TypeDto>>(Types));
+        }
+
+        public async Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct = default)
+        {
+            var Brands = await _unitOfWork.GetRepository<ProductBrand, int>().GetAllAsync(ct);
+            return Result<IReadOnlyList<BrandDto>>.Ok(_mapper.Map<IReadOnlyList<BrandDto>>(Brands));
         }
     }
 }
